@@ -2,13 +2,17 @@ name: RateLync UK to GH Worker
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
+
+concurrency:
+  group: ratelync-uk-gh-worker
+  cancel-in-progress: false
 
 jobs:
   run-worker:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
 
     env:
       INGEST_URL: ${{ secrets.INGEST_URL }}
