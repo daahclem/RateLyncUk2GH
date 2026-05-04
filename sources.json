@@ -1,0 +1,208 @@
+[
+  {
+    "provider": "LemFi",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://lemfi.com/en-gb/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Sendwave",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://www.sendwave.com/en-gb",
+    "send_amount": 1
+  },
+  {
+    "provider": "TapTap Send",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://www.taptapsend.com/en-gb",
+    "send_amount": 1
+  },
+  {
+    "provider": "TransferGo",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://www.transfergo.com/gb",
+    "send_amount": 1
+  },
+  {
+    "provider": "PayAngel",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://payangel.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "RemitChoice",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://www.remitchoice.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "RizRemit",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://rizremit.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Nala",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://www.nala.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Roze Remit",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://rozeremit.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "UnityLink",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://www.unitylink.com/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Afripay",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://afripay.uk/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Continental Money",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://www.continental.money/",
+    "send_amount": 1
+  },
+  {
+    "provider": "FP Transfer",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://fastpacetransfer.com/remittances/",
+    "send_amount": 1
+  },
+  {
+    "provider": "Instarem",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "bank_transfer",
+    "url": "https://www.instarem.com/en-gb/",
+    "send_amount": 1
+  },
+  {
+    "provider": "JubaExpress",
+    "origin": "GB",
+    "destination": "GH",
+    "payout_method": "mobile_money",
+    "url": "https://www.jubaexpress.com/",
+    "send_amount": 1
+  },
+  {
+  "provider": "Jupay",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://jupay.co/",
+  "send_amount": 1
+},
+{
+  "provider": "OaPay",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://www.oapay.co/",
+  "send_amount": 1
+},
+{
+  "provider": "Ohent Pay",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "mobile_money",
+  "url": "https://www.ohentpay.com/en-GB",
+  "send_amount": 1
+},
+{
+  "provider": "PadiePay",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "mobile_money",
+  "url": "https://www.padiepay.com/",
+  "send_amount": 1
+},
+{
+  "provider": "Paysend",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://paysend.com/en-gb",
+  "send_amount": 1
+},
+{
+  "provider": "Pesa.co",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://www.pesa.co/",
+  "send_amount": 1
+},
+{
+  "provider": "RemitnGo",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://remitngo.com/",
+  "send_amount": 1
+},
+{
+  "provider": "SendBuddie",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://www.sendbuddie.com/",
+  "send_amount": 1
+},
+{
+  "provider": "TransferGalaxy",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://transfergalaxy.com/en/",
+  "send_amount": 1
+},
+{
+  "provider": "VeloRemit",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://veloremit.com/en",
+  "send_amount": 1
+},
+{ "provider": "Mukuru", "origin": "GB", "destination": "GH", "payout_method": "bank_top_up", "url": "https://www.mukuru.com/", "send_amount": 1 },
+{ "provider": "XE", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.xe.com/", "send_amount": 1 },
+{ "provider": "PandaRemit", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.pandaremit.com/", "send_amount": 1 },
+{ "provider": "CurrencyFlow", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.currencyflow.com/", "send_amount": 1 },
+{ "provider": "Xoom", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.xoom.com/", "send_amount": 1 }
+
+]
