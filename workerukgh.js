@@ -4,7 +4,7 @@ const { chromium } = require("playwright");
 
 const INGEST_URL = process.env.INGEST_URL;
 const INGEST_TOKEN = process.env.INGEST_TOKEN;
-const HEADLESS = false; // set true in GitHub Actions later
+const HEADLESS = true; // set true in GitHub Actions later
 
 function currencyForDestination(destination) {
   if (destination === "GH") return "GHS";

@@ -1,0 +1,34 @@
+name: RateLync UK to GH Worker
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      INGEST_URL: ${{ secrets.INGEST_URL }}
+      INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+      HEADLESS: "true"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Run worker
+        run: node workerukgh.js
