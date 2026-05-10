@@ -367,93 +367,130 @@ async function handleTransferGo(page, source) {
 }
 
 
-async function handleMukuru(page, source) {
-  const verifiedFallbackRate = 14.82;
-
-  await page.goto("https://www.mukuru.com/en-uk/check-rates/", {
+async function handlePesaCo(page, source) {
+  await page.goto("https://www.pesa.co/", {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
 
-  await page.waitForTimeout(8000);
-
-  await page.getByText("Personal Business Menu").click({ timeout: 5000 }).catch(() => {});
-  await page.getByRole("button", { name: /Accept All|Accept/i }).click({ timeout: 8000 }).catch(() => {});
-  await page.keyboard.press("Escape").catch(() => {});
-
-  // Force lazy-loaded calculator area to appear
-  await page.mouse.wheel(0, 900).catch(() => {});
-  await page.waitForTimeout(5000);
-  await page.mouse.wheel(0, 900).catch(() => {});
   await page.waitForTimeout(5000);
 
-  let frame = null;
+  // Sending currency = GBP
+  await page.locator("#send-option").click({ timeout: 10000 });
 
-  // Try named frame first, then scan all frames
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const namedFrame = page.frame({ name: "calculatorFrame" });
-    if (namedFrame) {
-      const hasCalculator = await namedFrame.locator("#to_country").count().catch(() => 0);
-      if (hasCalculator) {
-        frame = namedFrame;
-        break;
-      }
-    }
+  await page.getByText("GBP").first().click({ timeout: 10000 }).catch(async () => {
+    await page.getByText(/^GBP$/).first().click().catch(() => {});
+  });
 
-    for (const f of page.frames()) {
-      const hasCalculator = await f.locator("#to_country").count().catch(() => 0);
-      if (hasCalculator) {
-        frame = f;
-        break;
-      }
-    }
+  await page.waitForTimeout(1500);
 
-    if (frame) break;
+  // Receiving currency = GHS
+  await page.locator("#receive-option").click({ timeout: 10000 });
 
-    await page.waitForTimeout(3000);
-  }
+  await page.getByText("GHS").nth(1).click({ timeout: 10000 }).catch(async () => {
+    await page.getByText(/^GHS$/).click().catch(() => {});
+  });
 
-  // If Mukuru blocks/hides iframe, do not fail the whole worker.
-  if (!frame) {
-    const bodyText = await page.locator("body").innerText().catch(() => "");
-    saveDebugText(
-      source.provider,
-      `Mukuru iframe not available. Using verified fallback rate from latest Playwright recording.\n\n${bodyText}`
-    );
+  await page.waitForTimeout(1500);
 
-    return buildResult(source, verifiedFallbackRate, 0, verifiedFallbackRate, {
-      quoted_send_amount: 100,
-      verified_method: "mukuru_verified_recording_fallback",
-    });
-  }
+  // Trigger calculator properly
+  await page.locator("#rateValue").click().catch(() => {});
+  await page.locator(".div-block-73").click().catch(() => {});
 
-  await frame.locator("#to_country").selectOption("GH");
+  // Use realistic quote amount
+  const scrapeAmount = 100;
 
-  const payInput = frame.getByRole("spinbutton", { name: /You pay/i });
-  await payInput.waitFor({ state: "visible", timeout: 30000 });
-  await payInput.click({ force: true });
-  await payInput.press("Control+A").catch(() => {});
-  await payInput.fill("100");
+  const sendInput = page.locator("#sendAmount");
 
-  await frame.getByRole("main").first().click({ timeout: 5000 }).catch(() => {});
-  await frame.getByRole("button", { name: /Calculate/i }).click({ timeout: 15000 });
+  await sendInput.waitFor({ timeout: 15000 });
 
+  await sendInput.click({ force: true });
+  await sendInput.press("Control+A").catch(() => {});
+  await sendInput.fill(String(scrapeAmount));
+
+  await page.locator(".image-25").click({ timeout: 5000 }).catch(() => {});
   await page.waitForTimeout(5000);
 
-  const rateText = await frame.locator("#rate_message_container").innerText().catch(() => "");
-  const frameText = await frame.locator("body").innerText().catch(() => "");
-  const pageText = await page.locator("body").innerText().catch(() => "");
-  const bodyText = `${rateText}\n${frameText}\n${pageText}`;
+  const rateText = await page.locator("#rateValue").innerText().catch(() => "");
+
+  const bodyText = `${rateText}\n${await page.locator("body").innerText()}`;
 
   saveDebugText(source.provider, bodyText);
 
   let rate = null;
 
   const patterns = [
-    /Rate\s*£1\s*:\s*GHS\s*([0-9.]+)/i,
-    /£1\s*:\s*GHS\s*([0-9.]+)/i,
     /1\s*GBP\s*=\s*([0-9.]+)\s*GHS/i,
-    /\b(14\.8200)\b/i,
+    /By exchange rate\s*1\s*GBP\s*=\s*([0-9.]+)\s*GHS/i,
+    /GBP\s*=\s*([0-9.]+)\s*GHS/i,
+    /\b(1[0-9]\.\d{2,5})\b/,
+  ];
+
+  for (const regex of patterns) {
+    const match = bodyText.match(regex);
+
+    if (!match) continue;
+
+    const candidate = parseLocaleNumber(match[1] || match[0]);
+
+    if (candidate && candidate >= 10 && candidate <= 25) {
+      rate = Number(candidate.toFixed(6));
+      break;
+    }
+  }
+
+  if (!rate) {
+    const file = await saveScreenshot(page, source.provider);
+    throw new Error(`Could not extract Pesa.co rate. Screenshot: ${file}`);
+  }
+
+  return {
+    provider_name: source.provider,
+    origin_country: source.origin,
+    destination_country: source.destination,
+    payout_method: source.payout_method,
+    send_amount: 1,
+    exchange_rate: rate,
+    amount_received: Number(rate.toFixed(6)),
+    fee: 0,
+    delivery_speed: null,
+    source_type: "browser_automation",
+    verification_status: "verified_from_quote_page",
+    source_url: source.url,
+    checked_at: new Date().toISOString(),
+    quoted_send_amount: scrapeAmount,
+  };
+}
+
+async function handlePaymit(page, source) {
+  await page.goto("https://paymit.co.uk/", {
+    waitUntil: "domcontentloaded",
+    timeout: 60000,
+  });
+
+  await page.waitForTimeout(5000);
+
+  await page.getByRole("img").nth(4).click({ timeout: 8000 }).catch(() => {});
+  await page.getByRole("img").nth(4).click({ timeout: 8000 }).catch(() => {});
+
+  await page.getByRole("combobox").click({ timeout: 10000 });
+
+  await page.getByLabel("GHS").getByText("GHS").click({ timeout: 10000 }).catch(async () => {
+    await page.getByText(/^GHS$/).first().click().catch(() => {});
+  });
+
+  await page.waitForTimeout(4000);
+
+  const bodyText = await page.locator("body").innerText();
+  saveDebugText(source.provider, bodyText);
+
+  let rate = null;
+
+  const patterns = [
+    /GBP\s*≈\s*([0-9.]+)\s*GHS/i,
+    /GBP\s*=\s*([0-9.]+)\s*GHS/i,
+    /1\s*GBP\s*=\s*([0-9.]+)\s*GHS/i,
+    /\b(15\.7100)\b/i,
     /\b(1[0-9]\.\d{2,5})\b/i,
   ];
 
@@ -469,12 +506,12 @@ async function handleMukuru(page, source) {
   }
 
   if (!rate) {
-    rate = verifiedFallbackRate;
+    const file = await saveScreenshot(page, source.provider);
+    throw new Error(`Could not extract Paymit rate. Screenshot: ${file}`);
   }
 
   return buildResult(source, rate, 0, rate, {
-    quoted_send_amount: 100,
-    verified_method: frame ? "mukuru_live_iframe" : "mukuru_verified_recording_fallback",
+    verified_method: "paymit_home_converter",
   });
 }
 
@@ -506,7 +543,6 @@ async function runSource(browser, source) {
     else if (source.provider === "Ohent Pay") payload = await handleOhentPay(page, source);
     else if (source.provider === "PadiePay") payload = await handlePadiePay(page, source);
     else if (source.provider === "Paysend") payload = await handlePaysend(page, source);
-    else if (source.provider === "Pesa.co") payload = await handlePesaCo(page, source);
     else if (source.provider === "RemitnGo") payload = await handleRemitnGo(page, source);
     else if (source.provider === "SendBuddie") payload = await handleSendBuddie(page, source);
     else if (source.provider === "TransferGalaxy") payload = await handleTransferGalaxy(page, source);
@@ -516,6 +552,8 @@ async function runSource(browser, source) {
     else if (source.provider === "PandaRemit") payload = await handlePandaRemit(page, source);
     else if (source.provider === "CurrencyFlow") payload = await handleCurrencyFlow(page, source);
     else if (source.provider === "Xoom") payload = await handleXoom(page, source);
+    else if (source.provider === "Paymit") payload = await handlePaymit(page, source);
+    else if (source.provider === "Pesa.co") payload = await handlePesaCo(page, source);
     else throw new Error(`No handler configured for ${source.provider}`);
     await postQuote(payload);
     console.log(`OK: ${source.provider} ${source.origin}->${source.destination}`);

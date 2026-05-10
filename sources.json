@@ -159,14 +159,7 @@
   "url": "https://paysend.com/en-gb",
   "send_amount": 1
 },
-{
-  "provider": "Pesa.co",
-  "origin": "GB",
-  "destination": "GH",
-  "payout_method": "bank_transfer",
-  "url": "https://www.pesa.co/",
-  "send_amount": 1
-},
+
 {
   "provider": "RemitnGo",
   "origin": "GB",
@@ -203,6 +196,15 @@
 { "provider": "XE", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.xe.com/", "send_amount": 1 },
 { "provider": "PandaRemit", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.pandaremit.com/", "send_amount": 1 },
 { "provider": "CurrencyFlow", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.currencyflow.com/", "send_amount": 1 },
-{ "provider": "Xoom", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.xoom.com/", "send_amount": 1 }
+{ "provider": "Xoom", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://www.xoom.com/", "send_amount": 1 },
+{ "provider": "Paymit", "origin": "GB", "destination": "GH", "payout_method": "bank_transfer", "url": "https://paymit.co.uk/", "send_amount": 1 },
+{
+  "provider": "Pesa.co",
+  "origin": "GB",
+  "destination": "GH",
+  "payout_method": "bank_transfer",
+  "url": "https://www.pesa.co/",
+  "send_amount": 1
+}
 
 ]
